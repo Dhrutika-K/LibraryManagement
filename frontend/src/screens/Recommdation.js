@@ -2,11 +2,9 @@ import {getAllBookReturnReq} from "../actions/Issue_action"
 import {recomBook} from "../actions/book_action"
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBook} from "../actions/book_action";
 import { getAllIssuedBook, issueABook} from "../actions/Issue_action";
 import {
   Typography,
-  TextField,
   Button,
   Table,
   TableBody,
@@ -18,115 +16,96 @@ import {
   Snackbar,
   Alert,
   Box,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Grid,Card,Divider,
-  TablePagination,useTheme, useMediaQuery, Modal,IconButton,
+  TablePagination,useTheme, useMediaQuery, Modal
 } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 
 const RecomBook = () => {
-    const dispatch = useDispatch();
-    const theme = useTheme();
-    const [author, setAuthor] = useState("");
-    const [genre, setGenre] = useState("");
-    const [department, setDepartment] = useState("");
-    const [show, setShow] = useState(false);
-    const [display, setDisplay] = useState(false);
-    const [bookTitle, setBookTitle] = useState(null);
-    const [error, setError] = useState(false);
-    const [page, setPage] = useState(0); // State for pagination
-    const [rowsPerPage, setRowsPerPage] = useState(10); // State for pagination
-    const [refreshBooks, setRefreshBooks] = useState(false);
-    const [name,setName]=useState("");
-    const [copies,setCopies]=useState();
-    const [status,setStatus]=useState("");
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [show, setShow] = useState(false);
+  const [display, setDisplay] = useState(false);
+  const [bookTitle, setBookTitle] = useState(null);
+  const [error, setError] = useState(false);
+  const [name, setName] = useState("");
+  const [author, setAuthor] = useState("");
+  const [copies, setCopies] = useState();
+  const [status, setStatus] = useState("");
 
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const { all_IssuedBook } = useSelector(state => state.allIssuedBookReducer);
-    const userRegister = useSelector(state => state.userRegisterReducer);
-    const userLogin = useSelector(state => state.userLoginReducer);
-    const currentUser = userRegister?.currentUser || userLogin?.currentUser;
-    const userId = currentUser.user._id;
-    const userBranch = currentUser.user.branch;
-    const userName = currentUser.user.name;
-    
-    const filteredBooks = all_IssuedBook && all_IssuedBook.filter(book => book.userId === userId );
-    const newBooksId = filteredBooks && filteredBooks.map(book => book.bookId);
-    console.log(newBooksId)
-    const postData = (book) => {
-        if (newBooksId && newBooksId.includes(book._id)) {
-            setError(true);
-            setTimeout(() => {
-                setError(false);
-            }, 3000);
-            return;
-        }
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-        if (book.copies < 1) {
-        console.log("No copies available");
-        return;
-        }
+  const { all_IssuedBook } = useSelector(state => state.allIssuedBookReducer);
+  const { returnbooks } = useSelector(state => state.getAllReturnBookReqReducer);
+  const { books } = useSelector(state => state.getRecomBookReducer);
+  const userRegister = useSelector(state => state.userRegisterReducer);
+  const userLogin = useSelector(state => state.userLoginReducer);
+  const currentUser = userRegister?.currentUser || userLogin?.currentUser;
+  const userId = currentUser.user._id;
+  const userBranch = currentUser.user.branch;
+  const userName = currentUser.user.name;
 
-        const { title, author, publisher, _id, copies } = book;
-        const issueUser = {
-        title, author, publisher, userId, bookId: _id, userBranch, userName, copies
-        };
+  useEffect(() => {
+      dispatch(getAllIssuedBook());
+      dispatch(getAllBookReturnReq());
+  }, [dispatch]);
 
-        if (book.copies) {
-        dispatch(issueABook(issueUser));
-        setBookTitle(title);
-        setShow(true);
-        dispatch(getAllBook());
-        } else {
-        alert("book not available");
-        }
+  useEffect(() => {
+      if (returnbooks.length > 0) {
+          const userBooks = returnbooks.filter(book => book.userId === userId);
+          const authors = Array.from(new Set(userBooks.map(book => book.author)));
+          const genres = Array.from(new Set(userBooks.map(book => book.genre)));
+          const departments = Array.from(new Set(userBooks.map(book => book.department)));
+          dispatch(recomBook(authors, genres, departments));
+      }
+  }, [dispatch, returnbooks, userId]);
 
-        setTimeout(() => {
-        setShow(false);
-        }, 5000);
-    };
+  const filteredBooks = all_IssuedBook.filter(book => book.userId === userId);
+  const newBooksId = filteredBooks.map(book => book.bookId);
+  console.log(returnbooks)
+  console.log(books)
+  const postData = (book) => {
+      if (newBooksId.includes(book._id)) {
+          setError(true);
+          setTimeout(() => setError(false), 3000);
+          return;
+      }
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+      if (book.copies < 1) {
+          console.log("No copies available");
+          return;
+      }
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+      const { title, author, publisher, _id, copies } = book;
+      const issueUser = { title, author, publisher, userId, bookId: _id, userBranch, userName, copies };
 
-    const handleModal = (book) => {
-        console.log("show");
-        setDisplay(true);
-        setName(book.title);
-        setAuthor(book.author);
-        setCopies(book.copies);
-        const mssg=book.copies > 0 ? "AVAILABLE" : "NOT AVAILABLE";
-        setStatus(mssg);
-    };
+      dispatch(issueABook(issueUser));
+      setBookTitle(title);
+      setShow(true);
+      setTimeout(() => setShow(false), 5000);
+  };
 
-    const handleClose = () => setDisplay(false);
-    const {returnbooks} = useSelector(state => state.getAllReturnBookReqReducer);
-    const userbooks=returnbooks && returnbooks.filter(book => book.userId === userId );
-    console.log(userbooks);
-    useEffect(()=> {
-        dispatch(getAllIssuedBook());
-        dispatch(getAllBookReturnReq());
-        const authors = Array.from(new Set(userbooks.map(book => book.author)));
-        const genres = Array.from(new Set(userbooks.map(book => book.genre)));
-        const departments = Array.from(new Set(userbooks.map(book => book.department)));
-        dispatch(recomBook(authors,genres,departments));
-    },[dispatch]) 
+  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+  };
 
-    const {books} = useSelector(state => state.getRecomBookReducer);
-    console.log(books);
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, books.length - page * rowsPerPage);
+  const handleModal = (book) => {
+      setDisplay(true);
+      setName(book.title);
+      setAuthor(book.author);
+      setCopies(book.copies);
+      setStatus(book.copies > 0 ? "AVAILABLE" : "NOT AVAILABLE");
+  };
+
+  const handleClose = () => setDisplay(false);
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, books.length - page * rowsPerPage);
     
 
     return (

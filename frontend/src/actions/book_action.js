@@ -127,39 +127,30 @@ export const filterValues = () => async dispatch => {
 };
 
 export const recomBook = (authors = [], genres = [], departments = []) => async dispatch => {
-    console.log("called");
-    dispatch({
-        type: 'GET_RECOMENDED_BOOKS_REQUEST'
-    });
+    dispatch({ type: 'GET_RECOMENDED_BOOKS_REQUEST' });
 
     try {
         const response = await axios.get('http://localhost:5000/api/books/allBook');
-        let filteredBooks = response.data;
-        console.log(filteredBooks);
-        if (authors.length > 0) {
-            filteredBooks = filteredBooks.filter(book =>
-                authors.some(author => book.author.toLowerCase() === author.toLowerCase())
-            );
-        }
+        let books = response.data;
 
-        if (genres.length > 0) {
-            filteredBooks = filteredBooks.filter(book =>
-                genres.some(genre => book.genre.toLowerCase() === genre.toLowerCase())
-            );
-        }
+        // Use Set for faster lookups
+        const authorSet = new Set(authors.map(author => author.toLowerCase()));
+        const genreSet = new Set(genres.map(genre => genre.toLowerCase()));
+        const departmentSet = new Set(departments.map(department => department.toLowerCase()));
 
-        if (departments.length > 0) {
-            filteredBooks = filteredBooks.filter(book =>
-                departments.some(department => book.department.toLowerCase() === department.toLowerCase())
-            );
-        }
-
+        // Filter books in a single pass
+        const filteredBooks = books.filter(book => 
+            (authors.length === 0 || authorSet.has(book.author.toLowerCase())) ||
+            (genres.length === 0 || genreSet.has(book.genre.toLowerCase())) ||
+            (departments.length === 0 || departmentSet.has(book.department.toLowerCase()))
+        );
         console.log(filteredBooks);
         dispatch({
             type: 'GET_RECOMENDED_BOOKS_SUCCESS',
             payload: filteredBooks
         });
     } catch (error) {
+        console.error("Error fetching recommended books:", error);
         dispatch({
             type: 'GET_RECOMENDED_BOOKS_FAILED',
             payload: error

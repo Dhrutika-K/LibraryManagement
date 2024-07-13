@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logoutUser } from "../actions/user_action";
 import {
   Drawer,
   List,
@@ -10,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
-  Typography,
   useTheme,
   useMediaQuery,
   Divider,
@@ -25,19 +21,14 @@ import {
   AssignmentTurnedIn as AssignmentTurnedInIcon,
   Recommend as RecommendIcon,
   Book as BookIcon,
-  ExitToApp as ExitToAppIcon,
   Menu as MenuIcon
 } from '@mui/icons-material';
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const currentUser = useSelector(state => state.userLoginReducer || {});
   const user = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
 
   const handleDrawerToggle = () => {
@@ -51,7 +42,6 @@ const Sidebar = () => {
     { text: 'Add Book', icon: <AddBoxIcon />, path: '/addBook', showForAdmin: true },
     { text: 'Manage Students', icon: <PeopleIcon />, path: '/manageStudent', showForAdmin: true },
     { text: 'Issue Request', icon: <AssignmentTurnedInIcon />, path: '/stuReqIssue', showForAdmin: true },
-    { text: 'Book Recommendation', icon: <RecommendIcon />, path: '/dashboard/Recommandation', showForAdmin: true },
     { text: 'All Issued Book', icon: <BookIcon />, path: '/allissuedBook', showForAdmin: true },
     { text: 'Recommended Book', icon: <RecommendIcon />, path: '/recommandation', showForAdmin: false },
     { text: 'Currently issued Book', icon: <BookIcon />, path: '/stuIssuedBook', showForAdmin: false },
