@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import ReviewsModal from './BookReviews';
 
 
 const RecomBook = () => {
@@ -48,6 +49,23 @@ const RecomBook = () => {
   const userId = currentUser.user._id;
   const userBranch = currentUser.user.branch;
   const userName = currentUser.user.name;
+
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState(null);
+  const [selectedBookTitle, setSelectedBookTitle] = useState('');
+
+  const handleReviewClick = (bookId, bookTitle) => {
+    setSelectedBookId(bookId);
+    setSelectedBookTitle(bookTitle);
+    setReviewModalOpen(true);
+  };
+
+  const handleReviewModalClose = () => {
+    setReviewModalOpen(false);
+    setSelectedBookId(null);
+    setSelectedBookTitle('');
+  };
+
 
   useEffect(() => {
       dispatch(getAllIssuedBook());
@@ -125,7 +143,7 @@ const RecomBook = () => {
       >
         <Sidebar />
       </Box>
-      <Box sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+      <Box sx={{ flexGrow: 1, p: 3, mt: 8, ml:8 }}>
         <Typography variant="h4" gutterBottom align="center" sx={{fontSize : isMobile ? '1rem' : '1.5rem'}}>
           All Recommend Books 
         </Typography>
@@ -158,6 +176,7 @@ const RecomBook = () => {
                       <TableCell>Copies</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell>Actions</TableCell>
+                      <TableCell>Reviews</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -182,6 +201,15 @@ const RecomBook = () => {
                             </Button>
 
                         </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleReviewClick(book._id, book.title)}
+                          >
+                            Reviews
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                     {emptyRows > 0 && (
@@ -202,6 +230,12 @@ const RecomBook = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Grid>
+            <ReviewsModal 
+              open={reviewModalOpen} 
+              handleClose={handleReviewModalClose} 
+              bookId={selectedBookId}
+              bookTitle={selectedBookTitle}
+            />
           </Grid>
             
           ) : (
@@ -216,6 +250,7 @@ const RecomBook = () => {
                       <TableCell>Title</TableCell>                   
                       <TableCell>Actions</TableCell>
                       <TableCell>Details</TableCell>
+                      <TableCell>Reviews</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -240,6 +275,15 @@ const RecomBook = () => {
                             Details
                           </Button>
                         </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleReviewClick(book._id, book.title)}
+                          >
+                            Reviews
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                     {emptyRows > 0 && (
@@ -261,6 +305,12 @@ const RecomBook = () => {
               />
             </Grid>
           </Grid>
+          <ReviewsModal 
+              open={reviewModalOpen} 
+              handleClose={handleReviewModalClose} 
+              bookId={selectedBookId}
+              bookTitle={selectedBookTitle}
+          />
           <Modal open={display} onClose={handleClose}>
             <Card sx={{ 
                 position: 'absolute', 

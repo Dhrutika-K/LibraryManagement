@@ -21,6 +21,7 @@ app.use('/public', express.static('public'));
 app.use('/api/users', require("./routes/student_route"))
 app.use('/api/books', require("./routes/book_route"))
 app.use('/api/issues', require("./routes/issue_route"))
+app.use('/api/reviews',require("./routes/reviews_route"))
 
 const port = 5000;
 const server = app.listen(port, () => {

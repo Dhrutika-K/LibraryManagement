@@ -13,6 +13,7 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import ReviewModal from './ReviewModal';
 
 const UserIssuedBook = () => {
     const dispatch = useDispatch();
@@ -30,6 +31,25 @@ const UserIssuedBook = () => {
     const { singleIsBook } = useSelector(state => state.singleIssuedBookReducer);
 
     const issuedBook = userIssuedBook && userIssuedBook.filter(item => item.isIssue);
+
+    const userRegister = useSelector(state => state.userRegisterReducer);
+    const userLogin = useSelector(state => state.userLoginReducer);
+    const currentUser = userRegister?.currentUser || userLogin?.currentUser;
+    const userId = currentUser.user._id;
+
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
+    const [selectedBookId, setSelectedBookId] = useState(null);
+
+    const handleReviewClick = (bookId) => {
+        setSelectedBookId(bookId);
+        setReviewModalOpen(true);
+    };
+
+  const handleReviewModalClose = () => {
+    setReviewModalOpen(false);
+    setSelectedBookId(null);
+  };
+
 
     useEffect(() => {
         dispatch(getUserIssuedBook());
@@ -135,10 +155,10 @@ const UserIssuedBook = () => {
                         <Typography variant="h4" sx={{ textAlign: "center", fontFamily: "sans-serif", mb: 4, color: theme.palette.primary.main }}>
                             My Issued Books
                         </Typography>
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} sx={{ml: isMobile ? 0 : 8}}>
                             {issuedBook.map(book => (
                                 <Grid item xs={12} sm={6} md={4} key={book._id}>
-                                    <Card elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                    <Card elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', width: isMobile ? '300px' : 'auto' }}>
                                         <CardContent>
                                             <Typography variant="h6" component="div" gutterBottom>
                                                 {book.title}
@@ -158,6 +178,11 @@ const UserIssuedBook = () => {
                                             </Tooltip>
                                             <Tooltip title="Details">
                                                 <IconButton color="primary" onClick={() => handleModal(book.bookId, book.updatedAt)}>
+                                                    <InfoIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Review">
+                                                <IconButton color="primary" onClick={() => handleReviewClick(book.bookId)}>
                                                     <InfoIcon />
                                                 </IconButton>
                                             </Tooltip>
@@ -195,6 +220,12 @@ const UserIssuedBook = () => {
                                 </Button>
                             </Card>
                         </Modal>
+                        <ReviewModal 
+                            open={reviewModalOpen} 
+                            handleClose={handleReviewModalClose} 
+                            bookId={selectedBookId} 
+                            userId={userId}
+                        />
                     </>
                 )}
             </Container>

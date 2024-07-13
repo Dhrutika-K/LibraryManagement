@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllBook, filterBook, filterValues,bookDeletedByAdmin } from "../actions/book_action";
 import { getAllIssuedBook, issueABook} from "../actions/Issue_action";
 import SearchIcon from '@mui/icons-material/Search';
+import BookReviews from './BookReviews';
 import {
   Typography,
   TextField,
@@ -50,6 +51,23 @@ const AllBook = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState(null);
+  const [selectedBookTitle, setSelectedBookTitle] = useState('');
+
+  const handleReviewClick = (bookId, bookTitle) => {
+    setSelectedBookId(bookId);
+    setSelectedBookTitle(bookTitle);
+    setReviewModalOpen(true);
+  };
+
+  const handleReviewModalClose = () => {
+    setReviewModalOpen(false);
+    setSelectedBookId(null);
+    setSelectedBookTitle('');
+  };
+
   
   useEffect(() => {
     dispatch(getAllBook());
@@ -208,6 +226,7 @@ const AllBook = () => {
                       <TableCell>Copies</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell>Actions</TableCell>
+                      <TableCell>Reviews</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -234,6 +253,15 @@ const AllBook = () => {
                               Issue
                             </Button>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleReviewClick(book._id, book.title)}
+                          >
+                            Reviews
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -315,6 +343,12 @@ const AllBook = () => {
                 
               </Paper>
             </Grid>
+            <BookReviews 
+              open={reviewModalOpen} 
+              handleClose={handleReviewModalClose} 
+              bookId={selectedBookId}
+              bookTitle={selectedBookTitle}
+            />
           </Grid>
             
           ) : (
@@ -343,10 +377,9 @@ const AllBook = () => {
                     <TableRow>
                       <TableCell>Serial No.</TableCell>
                       <TableCell>Title</TableCell>
-                      {/* <TableCell> */}
-                        <TableCell>Actions</TableCell>
-                        <TableCell>Details</TableCell>
-                      {/* </TableCell> */}
+                      <TableCell>Actions</TableCell>
+                      <TableCell>Details</TableCell>
+                      <TableCell>Reviews</TableCell>
                       
                     </TableRow>
                   </TableHead>
@@ -376,6 +409,15 @@ const AllBook = () => {
                             Details
                           </Button>
                         </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleReviewClick(book._id, book.title)}
+                          >
+                            Reviews
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                     {emptyRows > 0 && (
@@ -396,6 +438,12 @@ const AllBook = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Grid>
+            <BookReviews 
+              open={reviewModalOpen} 
+              handleClose={handleReviewModalClose} 
+              bookId={selectedBookId}
+              bookTitle={selectedBookTitle}
+            />
           </Grid>
           <Modal open={display} onClose={handleClose}>
             <Card sx={{ 
