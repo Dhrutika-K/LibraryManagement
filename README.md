@@ -60,5 +60,5 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 - cd backend
 - node server.js
 #### Start Frontend Server
-- cd ../frontend
+- cd frontend
 - npm start
