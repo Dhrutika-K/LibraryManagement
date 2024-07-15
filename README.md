@@ -35,8 +35,6 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 - MongoDB
 
 ### Clone the Repository
-
-```bash
 -git clone https://github.com/yourusername/library-management-system.git
 -cd library-management-system
 
@@ -44,7 +42,6 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 -For Backend
 -cd backend
 -npm install
-
 -For Frontend
 -cd frontend
 -npm install
@@ -58,7 +55,6 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 -Start Backend Server
 -cd backend
 -node server.js
-
 -Start Frontend Server
 -cd ../frontend
 -npm start
