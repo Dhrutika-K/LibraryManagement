@@ -37,28 +37,28 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/library-management-system.git
-cd library-management-system
+-git clone https://github.com/yourusername/library-management-system.git
+-cd library-management-system
 
 ###Install Dependencies 
-For Backend
-cd backend
-npm install
+-For Backend
+-cd backend
+-npm install
 
-For Frontend
-cd frontend
-npm install
+-For Frontend
+-cd frontend
+-npm install
 
 ###Environment Variables
-Create a .env file in the backend directory and add the following environment variables:
-JWT_SECRET=your_jwt_secret
-MONGO_URI=your_mongodb_cluster_url
+-Create a .env file in the backend directory and add the following environment variables:
+-JWT_SECRET=your_jwt_secret
+-MONGO_URI=your_mongodb_cluster_url
 
 ###Run the Application
-Start Backend Server
-cd backend
-node server.js
+-Start Backend Server
+-cd backend
+-node server.js
 
-Start Frontend Server
-cd ../frontend
-npm start
+-Start Frontend Server
+-cd ../frontend
+-npm start
