@@ -41,10 +41,10 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 
 ### Install Dependencies 
 
-- For Backend
+#### For Backend:
 - cd backend
 - npm install
-- For Frontend
+#### For Frontend
 - cd frontend
 - npm install
 
@@ -56,9 +56,9 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 
 ### Run the Application
 
-- Start Backend Server
+#### Start Backend Server
 - cd backend
 - node server.js
-- Start Frontend Server
+#### Start Frontend Server
 - cd ../frontend
 - npm start
