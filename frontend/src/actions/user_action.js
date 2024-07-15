@@ -59,33 +59,6 @@ export const logoutUser = (navigate) => async dispatch => {
 
 }
 
-
-export const userProfile = () => async (dispatch, getState) => {
-    dispatch({
-        type: "USER_PROFILE_REQUEST"
-    });
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("jwt"),
-        },
-    };
-
-    try {
-        const response = await axios.get('http://localhost:5000/api/users/profile', config);
-        dispatch({
-            type: "USER_PROFILE_SUCCESS",
-            payload: response.data,
-        });
-    } catch (error) {
-        dispatch({
-            type: "USER_PROFILE_FAILED",
-            payload: error,
-        });
-    }
-
-};
-
 export const getAllStudent = ()=> async dispatch =>{
     dispatch({
         type:'GET_STUDENTS_REQUEST'
@@ -106,8 +79,6 @@ export const getAllStudent = ()=> async dispatch =>{
 }
 
 export const removeAStudent = (postId)=> async dispatch =>{
-
-   
  
     try {
          await axios.post('http://localhost:5000/api/users/removeStudent',{postId});

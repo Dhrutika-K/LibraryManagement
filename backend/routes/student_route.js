@@ -92,17 +92,6 @@ router.post("/signin", (req, res) => {
     });
 });
 
-router.get("/profile", requireLogin, (req, res) => {
-  
-    Student.find({ _id: req.user._id })
-    .select("-password")
-    .then((admins) => {
-      res.json(admins);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-    });
 
 router.get("/allStudent", (req, res) => {
     console.log("okk")

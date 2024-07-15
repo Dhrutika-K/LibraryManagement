@@ -82,6 +82,7 @@ router.post("/issuedBookDelete" , async(req,res)=>{
         const department=book.department;
         const author=book.author;
         const returnBook= await new ReturnBook({userId,postId,genre,author,department});
+        await returnBook.save();
         res.send("you successfully return the book")
      } catch (error) {
         console.log(error);
@@ -90,15 +91,21 @@ router.post("/issuedBookDelete" , async(req,res)=>{
 
 //to allow a student issue book-->admin
 router.post("/issuedReqAccept", async(req, res) => {
+    console.log("called");
     const {postId,bookId} = req.body ;
+    console.log(postId,bookId)
     try {
         const issue = await Issue.findOne({_id : postId})
+        console.log(issue);
         const book = await Book.findOne({_id : bookId})
+        console.log(book);
         book.copies -= 1 ;
         await book.save();
         issue.isIssue = true
         await issue.save()
+        console.log("issue saved");
         const user=await Student.findOne({_id:issue.userId})
+        //console.log(user)
         if (user) {
           // Create a new notification
           const notification = new Notification({
@@ -108,7 +115,8 @@ router.post("/issuedReqAccept", async(req, res) => {
               read: false
           });
           await notification.save();
-      }
+          console.log("notification saved");
+        }
 
         res.send('issue Delivered Successfully')
     } catch (error) {
@@ -119,25 +127,26 @@ router.post("/issuedReqAccept", async(req, res) => {
 //to deny a student issue a book-->ADMIN
 router.post("/issueReqDelete" , async(req,res)=>{ 
     try {
-       await Issue.findOneAndDelete({ _id: req.body.postId }) ;     
-       res.send("you successfully return the book")
+      const issue=await Issue.findOneAndDelete({ _id: req.body.postId }) ;  
+      const bookId=issue.bookId;
+      const book = await Book.findOne({_id : bookId})  
+      const user=await Student.findOne({_id:issue.userId}) 
+      console.log(user,book);
+      if (user) {
+        // Create a new notification
+        const notification = new Notification({
+            userId: user._id,
+            message: `Your request to issue "${book.title}" has been rejected.`,
+            type: 'ISSUE_DELETED',
+            read: false
+        });
+        await notification.save();
+      }
+      res.send("you successfully deleted the issue request")
     } catch (error) {
        console.log(error);
     }  
 })
-
-// router.post("/issuedBook", async(req, res) => {
-//     const postId = req.body.postId
-//     try {
-//         const book = await Book.findOne({_id : postId})
-//         console.log(book)
-//         book.isIssue = true
-//         await book.save()
-//         res.send('book issued Successfully')
-//     } catch (error) {
-//         return res.status(400).json({ message: error});   
-//     } 
-// });
 
 //to get a given issued book by the user
 router.post("/singleIssuedBook", async(req, res) => {
@@ -216,9 +225,5 @@ router.post("/returnReq", async (req, res) => {
         return res.status(400).json({ message: error.message });
     }
 });
-
-module.exports = router;
-
-
 
 module.exports = router;

@@ -22,17 +22,7 @@ const IssueSchema = new mongoose.Schema({
     publisher: {
         type: String,   
     },
-    year: {
-        type: String,
-    },
-    noOfday:{
-        type:Number
-    },
     isIssue:{
-        type:Boolean,
-        default:false
-    },
-    isRecom:{
         type:Boolean,
         default:false
     }

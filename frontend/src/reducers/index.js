@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux';
-import { userLoginReducer, userRegisterReducer, userProfileReducer,getAllStudentReducer } from './user_reducer';
+import { userLoginReducer, userRegisterReducer, getAllStudentReducer } from './user_reducer';
 import { getRecomBookReducer,getAllBookReducer, addBookReducer,filterValuesReducer } from './book_reducer.js';
 import { issueRqquestReducer , getAllIssueBookReqReducer, getAllReturnBookReqReducer,userIssuedBookReducer,allIssuedBookReducer, singleIssuedBookReducer} from './issue_reducer';
 
 const rootReducer = combineReducers({
   userLoginReducer: userLoginReducer,
   userRegisterReducer: userRegisterReducer,
-  userProfileReducer: userProfileReducer,
   getAllStudentReducer:getAllStudentReducer,
   getAllBookReducer: getAllBookReducer,
   addBookReducer: addBookReducer,

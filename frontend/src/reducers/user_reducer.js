@@ -42,23 +42,6 @@ export const userLoginReducer = (state = initialState, action) => {
     }
 }
 
-
-export const userProfileReducer = (state = {}, action) => {
-    switch (action.type) {
-        case 'USER_LOGIN_REQUEST':
-            return {
-                loading: true
-            }
-        case 'USER_PROFILE_SUCCESS':
-            return { loading: false, success: true, currentUser: action.payload }
-        case 'USER_PROFILE_FAILED':
-            return { loading: false, error: action.payload }
-
-        default:
-            return state
-    }
-}
-
 export const getAllStudentReducer = (state={students:[]},action)=>{
     switch(action.type){
         case 'GET_STUDENTS_REQUEST':

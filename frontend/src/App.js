@@ -23,12 +23,6 @@ function App() {
         <Route path="/register" element={<SignInForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/adminLogin" element={<AdminLogin />} />
-        {/* 
-        <Route path="/dashboard/" element={<UserHome />} />
-        <Route path="/dashboard/RecomBook" element={<Recom_Book />} />
-        <Route path="/dashboard/issue_return" element={<IssueReturn />} />
-        <Route path="/dashboard/returnBook" element={<ReturnBook />} />
-        <Route path="/dashboard/addEmployee" element={<Addemployee />} /> */}
         <Route path="/stuReqIssue" element={<IssueRequest />} />
         <Route path="/notifications" element={<Messages />} />
         <Route path="/allBook" element={<AllBook />} />

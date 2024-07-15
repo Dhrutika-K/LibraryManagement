@@ -139,37 +139,20 @@ export const getAllBookIssueReq = ()=> async dispatch =>{
 export const issuedReq = (postId,bookId)=> async dispatch =>{
    
     try {
-         await axios.post('http://localhost:5000/api/issues/issuedReqAccept' , {postId,bookId})
+            await axios.post('http://localhost:5000/api/issues/issuedReqAccept' , {postId,bookId})
        
-        const response2 = await axios.get('http://localhost:5000/api/issues/allIssueRequest');
-        dispatch({
-           type:'GET_All_ISSUES_SUCCESS',
-           payload:response2.data
-       })
+            const response2 = await axios.get('http://localhost:5000/api/issues/allIssueRequest');
+            dispatch({
+                type:'GET_All_ISSUES_SUCCESS',
+                payload:response2.data
+            })
       } catch (error) {
-        console.log(error);
+            console.log(error);
       }
   
 }
 
 
-// export const returnReqAction = (obj)=> async dispatch =>{
-   
-//     try {
-//          await axios.post('http://localhost:5000/api/issues/returnReq' , obj)
-       
-       
-//         dispatch({
-//            type:'GET_RETURN_SUCCESS',
-           
-//        })
-//       } catch (error) {
-//         console.log(error);
-//       }
-  
-// }
-
-//user returns the book
 export const issueABookReturn = (postId)=> async dispatch =>{
 
     const config = {
