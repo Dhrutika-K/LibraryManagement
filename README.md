@@ -38,3 +38,12 @@ A comprehensive Library Management System built using React, Redux, Node.js, and
 
 - git clone https://github.com/yourusername/library-management-system.git
 - cd library-management-system
+
+###Install Dependencies 
+
+- For Backend
+- cd backend
+- npm install
+- For Frontend
+- cd frontend
+- npm install
